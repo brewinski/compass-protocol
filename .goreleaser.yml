@@ -1,0 +1,107 @@
+# GoReleaser configuration for Compass Protocol
+
+# Project metadata
+project_name: compass-protocol
+
+# Build configuration
+builds:
+  - id: compass-protocol
+    binary: compass-protocol
+    main: ./main.go
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+      - arm
+    goarm:
+      - "7"
+    # Build flags
+    ldflags:
+      - -s -w
+      - -X main.Version={{.Version}}
+    # Ignore specific OS/arch combinations
+    ignore:
+      - goos: windows
+        goarch: arm
+      - goos: windows
+        goarch: arm64
+
+# Archive configuration
+archives:
+  - id: default
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - LICENSE*
+      - README*
+      - CHANGELOG*
+
+# Checksum configuration
+checksum:
+  name_template: 'checksums.txt'
+  algorithm: sha256
+
+# Changelog configuration
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^ci:'
+      - '^chore:'
+      - 'typo'
+  groups:
+    - title: Features
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+      order: 0
+    - title: 'Bug fixes'
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
+      order: 1
+    - title: Others
+      order: 999
+
+# Release configuration
+release:
+  github:
+    owner: brewinski
+    name: compass-protocol
+  draft: false
+  prerelease: auto
+  mode: replace
+  header: |
+    ## Compass Protocol {{ .Tag }} ({{ .Date }})
+
+    Welcome to this release of Compass Protocol MCP Server!
+
+  footer: |
+    ## Installation
+
+    ### Download Binary
+    Download the appropriate binary for your platform from the assets below.
+
+    ### Using Go
+    ```bash
+    go install github.com/brewinski/compass-protocol@{{ .Tag }}
+    ```
+
+    **Full Changelog**: https://github.com/brewinski/compass-protocol/compare/{{ .PreviousTag }}...{{ .Tag }}
+
+# Snapshot configuration
+snapshot:
+  name_template: '{{ incpatch .Version }}-next'
