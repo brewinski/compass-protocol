@@ -58,6 +58,28 @@ Or using the Makefile:
 make run
 ```
 
+### Using with Claude Desktop
+
+To integrate this server with Claude Desktop, add it to your Claude configuration:
+
+**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+
+**Windows**: `%APPDATA%/Claude/claude_desktop_config.json`
+
+**Linux**: `~/.config/Claude/claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "compass-protocol": {
+      "command": "/path/to/compass-protocol"
+    }
+  }
+}
+```
+
+Replace `/path/to/compass-protocol` with the actual path to your built binary.
+
 ### Testing the Server
 
 Run the test suite:
@@ -90,6 +112,21 @@ make fmt
 # Show help
 make help
 ```
+
+### Example Client
+
+An example MCP client is provided in the `examples/` directory. To run it:
+
+```bash
+# Make sure the server is built first
+make build
+
+# Run the example client
+cd examples
+go run client.go
+```
+
+See [examples/README.md](examples/README.md) for more details.
 
 ## Available Tools
 
@@ -137,15 +174,23 @@ Returns the server version.
 ```
 .
 ├── main.go              # Main server implementation
+├── main_test.go         # Tests
 ├── go.mod               # Go module dependencies
 ├── go.sum               # Go module checksums
 ├── Makefile             # Build and development tasks
 ├── .gitignore           # Git ignore patterns
+├── .golangci.yml        # Linter configuration
 ├── .goreleaser.yml      # GoReleaser configuration
+├── examples/            # Example client code
+│   ├── client.go        # Example MCP client
+│   └── README.md        # Examples documentation
 ├── .github/
 │   └── workflows/
 │       ├── ci.yml       # CI workflow (test and lint)
 │       └── release.yml  # Release workflow (build and publish)
+├── CONTRIBUTING.md      # Contribution guidelines
+├── CHANGELOG.md         # Version history
+├── LICENSE              # MIT License
 └── README.md            # This file
 ```
 
