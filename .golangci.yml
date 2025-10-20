@@ -1,0 +1,35 @@
+# golangci-lint configuration
+# See https://golangci-lint.run/usage/configuration/
+
+run:
+  timeout: 5m
+  go: '1.23'
+
+linters:
+  enable:
+    - gofmt
+    - goimports
+    - govet
+    - errcheck
+    - staticcheck
+    - unused
+    - gosimple
+    - ineffassign
+    - typecheck
+    - misspell
+    - unconvert
+    - unparam
+    - prealloc
+
+linters-settings:
+  goimports:
+    local-prefixes: github.com/brewinski/compass-protocol
+  
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0
